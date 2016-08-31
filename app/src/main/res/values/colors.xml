@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--App colors-->
     <color name="primary">#00BCD4</color>
-    <!--<color name="primary_dark">#00ACC1</color>-->
-    <color name="primary_dark">#333</color>
-    <color name="accent">#FFFF00</color>
+    <color name="accent">@color/primary</color>
+    <color name="primary_super_dark">#11261c</color> <!-- same hue & sat, 15% brightness -->
+
     <color name="placeholder">#ddd</color>
     <color name="grey_ripple">#8ddd</color>
     <color name="author_background">#66000000</color>
     <color name="page_margin">#eee</color>
+
+    <color name="toolbar">#ff292929</color>
+    <color name="status_bar">#ff676767</color>
+    <color name="immersive_bars">#99000000</color>
+    <color name="background_dark">#ff333333</color>
+    <color name="status_bar_back">#ff676767</color> <!-- this is blended with immersive_bars to produce the desired status bar color i.e. background_super_dark -->
+    <color name="background_super_dark">#ff292929</color>
+
+    <color name="text_primary_light">#ffffffff</color>
 </resources>

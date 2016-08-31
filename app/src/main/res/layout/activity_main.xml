@@ -3,16 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
 
-    <ProgressBar
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/placeholder"
-        android:indeterminateTintMode="src_in" />
+    <View
+        android:id="@+id/status_bar_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/status_bar_back" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/image_grid"
@@ -25,5 +23,23 @@
         android:orientation="vertical"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="@integer/photo_grid_columns" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/toolbar"
+        android:outlineProvider="none"
+        style="@style/Widget.Attractions.HomeToolbar"
+        android:title="@string/app_name"/>
+
+    <ProgressBar
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/placeholder"
+        android:indeterminateTintMode="src_in" />
 
 </FrameLayout>

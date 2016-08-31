@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Kerala Attractions</string>
+    <string name="app_name">Attractions</string>
+
+    <string name="author">Author</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="place">Place</string>
+    <string name="upload">Upload</string>
+    <string name="sign_in">Sign in</string>
 </resources>
