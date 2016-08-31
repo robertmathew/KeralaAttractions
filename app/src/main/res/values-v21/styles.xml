@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Base application theme. -->
     <style name="Attractions" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
         <item name="colorAccent">@color/accent</item>
+        <item name="android:navigationBarColor">@color/primary_super_dark</item>
+        <item name="android:statusBarColor">@color/background_super_dark</item>
     </style>
 
     <style name="Attractions.Home">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/immersive_bars</item>
+        <item name="android:navigationBarColor">@color/immersive_bars</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
-    
+
     <style name="Widget.Attractions" parent="android:Widget"/>
 
     <style name="Widget.Attractions.Toolbar">
@@ -41,11 +45,12 @@
 
     <style name="TextAppearance.ToolbarTitleSmallCaps" parent="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:fontFeatureSettings">smcp</item>
+        <item name="android:letterSpacing">0.1</item>
     </style>
 
     <style name="AttractionsDarkOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- Used to theme dark elements in light themed screens.
              Extend the AppCompat dark Action Bar overlay as this contains text styling. -->
     </style>
-
 </resources>
