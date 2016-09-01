@@ -24,12 +24,13 @@ public class Photo {
     public Photo() {
     }
 
-    public Photo(String author, String authorId, String authorPhotoUrl, String title, String place) {
+    public Photo(String author, String authorId, String authorPhotoUrl, String title, String place, String photo) {
         this.authorName = author;
         this.authorId = authorId;
         this.authorPhotoUrl = authorPhotoUrl;
         this.title = title;
         this.place = place;
+        this.photo = photo;
     }
 
     public String getPhoto() {

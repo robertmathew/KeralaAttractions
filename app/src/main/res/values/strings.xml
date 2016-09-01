@@ -5,6 +5,13 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="place">Place</string>
+    <string name="click_image">Click to add image</string>
     <string name="upload">Upload</string>
     <string name="sign_in">Sign in</string>
+    <string name="image">Image</string>
+    
+    <string name="progress_dialog">Uploading</string>
+    <string name="please_wait">Please wait</string>
+
+    <string name="failed_upload">Failed to upload!</string>
 </resources>
