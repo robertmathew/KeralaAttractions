@@ -9,13 +9,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 /**
  * Created by Robo on 25-08-2016.
  */
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
-    private int[] mDataset;
+    private ArrayList<Photo> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -32,7 +34,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PhotoAdapter(int[] myDataset) {
+    public PhotoAdapter(ArrayList<Photo> myDataset) {
         mDataset = myDataset;
     }
 
@@ -54,8 +56,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        Photo photo = mDataset.get(position);
         Glide.with(holder.mImageView.getContext())
-                .load(mDataset[position])
+                .load(photo.getPhoto())
+                .thumbnail(0.1f)
                 .placeholder(R.color.placeholder)
                 .into(holder.mImageView);
 
@@ -64,6 +68,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

@@ -6,6 +6,8 @@ package com.coltan.keralaattractions;
 
 public class Photo {
 
+    private String id;
+
     //Author info
     private String authorName;
     private String authorId;
@@ -33,6 +35,30 @@ public class Photo {
         this.photo = photo;
     }
 
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
+
+    public String getAuthorPhotoUrl() {
+        return authorPhotoUrl;
+    }
+
+    public void setAuthorPhotoUrl(String authorPhotoUrl) {
+        this.authorPhotoUrl = authorPhotoUrl;
+    }
+
     public String getPhoto() {
         return photo;
     }
@@ -49,20 +75,20 @@ public class Photo {
         this.title = title;
     }
 
-    public String getAuthorPhotoUrl() {
-        return authorPhotoUrl;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAuthorPhotoUrl(String authorPhotoUrl) {
-        this.authorPhotoUrl = authorPhotoUrl;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getAuthorId() {
-        return authorId;
+    public String getPlace() {
+        return place;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public String getLatitude() {
@@ -95,29 +121,5 @@ public class Photo {
 
     public void setTags(String tags) {
         this.tags = tags;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public void setAuthorName(String author) {
-        this.authorName = author;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

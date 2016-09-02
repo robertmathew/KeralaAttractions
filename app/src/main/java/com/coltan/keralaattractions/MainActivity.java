@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,14 +18,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coltan.keralaattractions.ui.GridMarginDecoration;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private int[] mDataset = {R.drawable.photo1, R.drawable.photo2, R.drawable.photo3, R.drawable.photo4,
-            R.drawable.photo5, R.drawable.photo6, R.drawable.photo7, R.drawable.photo8};
     private Toolbar toolbar;
+
+    private ArrayList<Photo> photoList;
+    private PhotoAdapter photoAdapter;
+
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        photoList = new ArrayList<Photo>();
+        readDataFromFirebase();
 
         if (savedInstanceState == null) {
             animateToolbar();
@@ -45,19 +63,53 @@ public class MainActivity extends AppCompatActivity {
         populateGrid();
     }
 
+    private void readDataFromFirebase() {
+        mDatabase.child("photos").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // A new photo has been added, add it to the displayed list
+                Photo photo = dataSnapshot.getValue(Photo.class);
+                photoList.add(photo);
+                photoAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //photoAdapter.notifyDataSetChanged();
+    }
+
     private void setupRecyclerView() {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch (position % 6) {
+                /*switch (position % 6) {
                     case 5:
                         return 3;
                     case 3:
                         return 2;
                     default:
                         return 1;
-                }
+                }*/
+                return (position % 3 == 0 ? 2 : 1);
             }
         });
         mRecyclerView.addItemDecoration(new GridMarginDecoration(
@@ -67,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateGrid() {
-        mRecyclerView.setAdapter(new PhotoAdapter(mDataset));
+        photoAdapter = new PhotoAdapter(photoList);
+        mRecyclerView.setAdapter(photoAdapter);
         mProgressBar.setVisibility(View.GONE);
     }
 
