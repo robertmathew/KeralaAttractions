@@ -27,12 +27,14 @@ public class Photo implements Parcelable {
     public Photo() {
     }
 
-    public Photo(String author, String authorId, String authorPhotoUrl, String title, String place, String photo) {
+    public Photo(String author, String authorId, String authorPhotoUrl, String title, String place,
+                 String description, String photo) {
         this.authorName = author;
         this.authorId = authorId;
         this.authorPhotoUrl = authorPhotoUrl;
         this.title = title;
         this.place = place;
+        this.description = description;
         this.photo = photo;
     }
 

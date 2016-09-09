@@ -62,7 +62,7 @@ public class UploadPhotoActivity extends AppCompatActivity implements
     private StorageReference storageRef;
 
     private ImageButton imageView;
-    private EditText edTitle, edPlace;
+    private EditText edTitle, edPlace, edDescription;
 
     private Uri imageUri;
 
@@ -104,6 +104,7 @@ public class UploadPhotoActivity extends AppCompatActivity implements
 
         edTitle = (EditText) findViewById(R.id.etTitle);
         edPlace = (EditText) findViewById(R.id.etPlace);
+        edDescription = (EditText) findViewById(R.id.etDescription);
         imageView = (ImageButton) findViewById(R.id.imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -235,10 +236,11 @@ public class UploadPhotoActivity extends AppCompatActivity implements
     private void uploadData(String downloadUri) {
         String title = edTitle.getText().toString();
         String place = edPlace.getText().toString();
+        String description = edDescription.getText().toString();
         //Log.d(TAG, "Data: " + mUsername + " " + mUsernameId + " " + mPhotoUrl);
         //Log.d(TAG, "Data: " + title + " " + place);
 
-        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, downloadUri);
+        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri);
         mDatabaseReference.child("photos").push().setValue(photo, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
