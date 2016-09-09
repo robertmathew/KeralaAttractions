@@ -14,11 +14,13 @@
             android:theme="@style/Attractions.Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UploadPhotoActivity"></activity>
-        <activity android:name=".SignInActivity"></activity>
+        <activity android:name=".UploadPhotoActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

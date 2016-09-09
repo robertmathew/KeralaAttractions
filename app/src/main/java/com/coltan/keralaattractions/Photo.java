@@ -1,12 +1,13 @@
 package com.coltan.keralaattractions;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Robo on 25-08-2016.
  */
 
-public class Photo {
-
-    private String id;
+public class Photo implements Parcelable {
 
     //Author info
     private String authorName;
@@ -122,4 +123,43 @@ public class Photo {
     public void setTags(String tags) {
         this.tags = tags;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(authorName);
+        dest.writeString(authorId);
+        dest.writeString(authorPhotoUrl);
+        dest.writeString(title);
+        dest.writeString(place);
+        dest.writeString(description);
+        dest.writeString(photo);
+
+    }
+
+    protected Photo(Parcel in) {
+        authorName = in.readString();
+        authorId = in.readString();
+        authorPhotoUrl = in.readString();
+        title = in.readString();
+        place = in.readString();
+        description = in.readString();
+        photo = in.readString();
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel in) {
+            return new Photo(in);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }
