@@ -16,6 +16,7 @@ public class Photo implements Parcelable {
 
     //Photo info
     private String photo;
+    private String photoRef;
     private String title;
     private String description;
     private String place;
@@ -28,7 +29,7 @@ public class Photo implements Parcelable {
     }
 
     public Photo(String author, String authorId, String authorPhotoUrl, String title, String place,
-                 String description, String photo) {
+                 String description, String photo, String photoRef) {
         this.authorName = author;
         this.authorId = authorId;
         this.authorPhotoUrl = authorPhotoUrl;
@@ -36,6 +37,8 @@ public class Photo implements Parcelable {
         this.place = place;
         this.description = description;
         this.photo = photo;
+        this.photoRef = photoRef;
+
     }
 
     public String getAuthorName() {
@@ -68,6 +71,14 @@ public class Photo implements Parcelable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getPhotoRef() {
+        return photoRef;
+    }
+
+    public void setPhotoRef(String photoRef) {
+        this.photoRef = photoRef;
     }
 
     public String getTitle() {
@@ -140,6 +151,7 @@ public class Photo implements Parcelable {
         dest.writeString(place);
         dest.writeString(description);
         dest.writeString(photo);
+        dest.writeString(photoRef);
 
     }
 
@@ -151,6 +163,7 @@ public class Photo implements Parcelable {
         place = in.readString();
         description = in.readString();
         photo = in.readString();
+        photoRef = in.readString();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {

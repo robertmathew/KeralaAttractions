@@ -65,6 +65,7 @@ public class UploadPhotoActivity extends AppCompatActivity implements
     private EditText edTitle, edPlace, edDescription;
 
     private Uri imageUri;
+    String photoPath;
 
     private Context mContext;
 
@@ -225,22 +226,24 @@ public class UploadPhotoActivity extends AppCompatActivity implements
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Handle successful uploads on complete
+                photoPath = taskSnapshot.getMetadata().getPath();
+                Log.d(TAG, "onSuccess: " + photoPath);
                 Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
                 Log.d(TAG, "onSuccess: " + downloadUrl);
                 progressDialog.dismiss();
-                uploadData(downloadUrl.toString());
+                uploadData(downloadUrl.toString(), photoPath);
             }
         });
     }
 
-    private void uploadData(String downloadUri) {
+    private void uploadData(String downloadUri, String photoPath) {
         String title = edTitle.getText().toString();
         String place = edPlace.getText().toString();
         String description = edDescription.getText().toString();
         //Log.d(TAG, "Data: " + mUsername + " " + mUsernameId + " " + mPhotoUrl);
         //Log.d(TAG, "Data: " + title + " " + place);
 
-        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri);
+        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri, photoPath);
         mDatabaseReference.child("photos").push().setValue(photo, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
