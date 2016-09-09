@@ -25,7 +25,6 @@ public class DetailActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(photo.getPhoto())
-                .placeholder(R.color.placeholder)
                 .centerCrop()
                 .into(imgPhoto);
 
@@ -35,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         tvAuthor.setText(photo.getAuthorName());
         Glide.with(this)
                 .load(photo.getAuthorPhotoUrl())
-                .placeholder(R.color.placeholder)
+                .dontAnimate()
                 .into(imgAuthor);
     }
 }
