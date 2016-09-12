@@ -24,12 +24,15 @@ public class Photo implements Parcelable {
     private String longitude;
     private String date;
     private String tags;
+    private String timestamp;
+    private String invertedTimestamp;
 
     public Photo() {
     }
 
     public Photo(String author, String authorId, String authorPhotoUrl, String title, String place,
-                 String description, String photo, String photoRef) {
+                 String description, String photo, String photoRef, String date, String timestamp,
+                 String invertedTimestamp) {
         this.authorName = author;
         this.authorId = authorId;
         this.authorPhotoUrl = authorPhotoUrl;
@@ -38,6 +41,9 @@ public class Photo implements Parcelable {
         this.description = description;
         this.photo = photo;
         this.photoRef = photoRef;
+        this.date = date;
+        this.timestamp = timestamp;
+        this.invertedTimestamp = invertedTimestamp;
 
     }
 
@@ -137,6 +143,22 @@ public class Photo implements Parcelable {
         this.tags = tags;
     }
 
+    public String getInvertedTimestamp() {
+        return invertedTimestamp;
+    }
+
+    public void setInvertedTimestamp(String invertedTimestamp) {
+        this.invertedTimestamp = invertedTimestamp;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -152,6 +174,9 @@ public class Photo implements Parcelable {
         dest.writeString(description);
         dest.writeString(photo);
         dest.writeString(photoRef);
+        dest.writeString(date);
+        dest.writeString(timestamp);
+        dest.writeString(invertedTimestamp);
 
     }
 
@@ -164,6 +189,9 @@ public class Photo implements Parcelable {
         description = in.readString();
         photo = in.readString();
         photoRef = in.readString();
+        date = in.readString();
+        timestamp = in.readString();
+        invertedTimestamp = in.readString();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {

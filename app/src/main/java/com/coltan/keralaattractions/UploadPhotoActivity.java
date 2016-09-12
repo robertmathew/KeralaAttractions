@@ -66,6 +66,8 @@ public class UploadPhotoActivity extends AppCompatActivity implements
 
     private Uri imageUri;
     String photoPath;
+    long millis;
+    String datetime;
 
     private Context mContext;
 
@@ -190,17 +192,20 @@ public class UploadPhotoActivity extends AppCompatActivity implements
                 .build();
 
         //Unique filename for images with author name, date and millisecond
-        long millis = System.currentTimeMillis();
-        String datetime = new Date().toString();
-        String filename = String.format("%s_%s_%s", mUsername, datetime, millis);
+        millis = System.currentTimeMillis();
+        datetime = new Date().toString();
+        String datetimeFile = datetime;
+        datetimeFile = datetimeFile.replace(" ", "");
+        datetimeFile = datetimeFile.replace(":", "");
+        String filename = String.format("%s_%s_%s", mUsername.replace(" ", ""), datetimeFile, millis);
 
         // Create a reference to "mountains.jpg"
         StorageReference mountainsRef = storageRef.child("images/" + filename + ".jpg");
 
         // Upload file and metadata to the path 'images/mountains.jpg'
         UploadTask uploadTask = mountainsRef.putFile(imageUri, metadata);
-        Uri imageUri = uploadTask.getSnapshot().getDownloadUrl();
-        Log.d(TAG, "uploadImage: Download Uri" + imageUri);
+        //Uri imageUri = uploadTask.getSnapshot().getDownloadUrl();
+        //Log.d(TAG, "uploadImage: Download Uri" + imageUri);
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -227,9 +232,9 @@ public class UploadPhotoActivity extends AppCompatActivity implements
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Handle successful uploads on complete
                 photoPath = taskSnapshot.getMetadata().getPath();
-                Log.d(TAG, "onSuccess: " + photoPath);
+                //Log.d(TAG, "onSuccess: " + photoPath);
                 Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
-                Log.d(TAG, "onSuccess: " + downloadUrl);
+                //Log.d(TAG, "onSuccess: " + downloadUrl);
                 progressDialog.dismiss();
                 uploadData(downloadUrl.toString(), photoPath);
             }
@@ -240,10 +245,12 @@ public class UploadPhotoActivity extends AppCompatActivity implements
         String title = edTitle.getText().toString();
         String place = edPlace.getText().toString();
         String description = edDescription.getText().toString();
+        String invertedDate = String.valueOf(-1 * new Date().getTime());
         //Log.d(TAG, "Data: " + mUsername + " " + mUsernameId + " " + mPhotoUrl);
         //Log.d(TAG, "Data: " + title + " " + place);
 
-        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri, photoPath);
+        photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri,
+                photoPath, datetime, String.valueOf(millis), invertedDate);
         mDatabaseReference.child("photos").push().setValue(photo, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

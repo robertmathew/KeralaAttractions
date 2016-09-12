@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // A new photo has been added, add it to the displayed list
+                Log.d(TAG, "onChildAdded: " + s);
                 Photo photo = dataSnapshot.getValue(Photo.class);
                 photoList.add(photo);
                 photoAdapter.notifyDataSetChanged();
