@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(photo.getPhoto())
-                .centerCrop()
+                .priority(Priority.HIGH)
                 .into(imgPhoto);
 
         tvTitle.setText(photo.getTitle());
