@@ -2,6 +2,7 @@ package com.coltan.keralaattractions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    private TextView tvConnection;
     private Toolbar toolbar;
 
     private ArrayList<Photo> photoList;
@@ -50,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.image_grid);
+        mProgressBar = (ProgressBar) findViewById(R.id.empty);
+        tvConnection = (TextView) findViewById(R.id.noConnection);
+
+        if(!isNetworkConnected()){
+            tvConnection.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             animateToolbar();
         }
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.image_grid);
-        mProgressBar = (ProgressBar) findViewById(R.id.empty);
 
         setupRecyclerView();
         populateGrid();
@@ -105,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         });
         if (photoAdapter != null) {
             mProgressBar.setVisibility(View.GONE);
+            tvConnection.setVisibility(View.GONE);
         }
     }
 
@@ -197,5 +206,10 @@ public class MainActivity extends AppCompatActivity {
                     .setInterpolator(AnimationUtils.loadInterpolator(this,
                             android.R.interpolator.overshoot));
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

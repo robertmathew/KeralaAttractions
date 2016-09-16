@@ -44,6 +44,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_connection"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_gravity="center"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/text_primary_light"
+        android:id="@+id/noConnection" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/image_grid"
         android:layout_width="0dp"

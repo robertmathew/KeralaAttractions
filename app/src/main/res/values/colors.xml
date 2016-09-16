@@ -18,5 +18,5 @@
     <color name="background_super_dark">#ff292929</color>
     <color name="background_title">#fff5f5f5</color>
 
-    <color name="text_primary_light">#ffffffff</color>
+    <color name="text_primary_light">#ffffff</color>
 </resources>
