@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,10 @@ import java.util.ArrayList;
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
+    private static final String TAG = "PhotoAdapter";
+
     private ArrayList<Photo> mDataset;
+    private ArrayList<String> mKeyList;
     private Context mContext;
 
     // Provide a reference to the views for each data item
@@ -43,8 +47,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PhotoAdapter(ArrayList<Photo> myDataset, Context context) {
+    public PhotoAdapter(ArrayList<Photo> myDataset, ArrayList<String> keyList, Context context) {
         mDataset = myDataset;
+        mKeyList = keyList;
         mContext = context;
     }
 
@@ -67,6 +72,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Photo photo = mDataset.get(position);
+        final String photoKey = mKeyList.get(position);
+        Log.d(TAG, "onBindViewHolder: " + photoKey);
         Glide.with(holder.mImageView.getContext())
                 .load(photo.getPhoto())
                 .thumbnail(0.1f)
@@ -79,6 +86,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent i = new Intent(mContext, DetailActivity.class);
                 i.putExtra("photo", photo);
+                i.putExtra("key", photoKey);
                 mContext.startActivity(i);
             }
         });

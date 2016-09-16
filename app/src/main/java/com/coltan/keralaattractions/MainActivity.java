@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private ArrayList<Photo> photoList;
+    private ArrayList<String> keyList;
     private PhotoAdapter photoAdapter;
 
     private DatabaseReference mDatabase;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         photoList = new ArrayList<Photo>();
+        keyList = new ArrayList<>();
         readDataFromFirebase();
 
         if (savedInstanceState == null) {
@@ -72,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // A new photo has been added, add it to the displayed list
-                Log.d(TAG, "onChildAdded: " + s);
+                //Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
+                keyList.add(dataSnapshot.getKey());
                 Photo photo = dataSnapshot.getValue(Photo.class);
                 photoList.add(photo);
+
                 photoAdapter.notifyDataSetChanged();
             }
 
@@ -124,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateGrid() {
-        photoAdapter = new PhotoAdapter(photoList, mContext);
+        photoAdapter = new PhotoAdapter(photoList, keyList, mContext);
         mRecyclerView.setAdapter(photoAdapter);
         mProgressBar.setVisibility(View.GONE);
     }
