@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.image_grid);
-        mProgressBar = (ProgressBar) findViewById(android.R.id.empty);
+        mProgressBar = (ProgressBar) findViewById(R.id.empty);
 
         setupRecyclerView();
         populateGrid();
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 photoList.add(photo);
 
                 photoAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -102,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //photoAdapter.notifyDataSetChanged();
+        if (photoAdapter != null) {
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 
     private void setupRecyclerView() {
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
     private void populateGrid() {
         photoAdapter = new PhotoAdapter(photoList, keyList, mContext);
         mRecyclerView.setAdapter(photoAdapter);
-        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
