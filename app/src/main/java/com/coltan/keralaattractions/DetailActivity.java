@@ -1,5 +1,11 @@
 package com.coltan.keralaattractions;
 
+import android.app.WallpaperManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +17,14 @@ import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,7 +37,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,13 +79,16 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private FirebaseUser mFirebaseUser;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
+    private MaterialDialog materialDialog;
 
     private ImageButton btnSendComment;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        mContext = this;
 
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -93,16 +108,24 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        Photo photo = getIntent().getExtras().getParcelable("photo");
+        final Photo photo = getIntent().getExtras().getParcelable("photo");
         final String photoKey = getIntent().getExtras().getString("key");
         //Log.d(TAG, "onCreate: " + photoKey);
 
-        ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
+        final ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
         TextView tvTitle = (TextView) findViewById(R.id.title);
         TextView tvPlace = (TextView) findViewById(R.id.place);
         TextView tvDescription = (TextView) findViewById(R.id.description);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
+        Button btnLike = (Button) findViewById(R.id.action_like);
+        Button btnWallpaper = (Button) findViewById(R.id.action_set_wallpaper);
+        btnWallpaper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new WallpaperTask().execute(photo.getPhoto());
+            }
+        });
 
         Glide.with(this)
                 .load(photo.getPhoto())
@@ -207,5 +230,47 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed: Connection failed!");
+    }
+
+    private class WallpaperTask extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected void onPreExecute() {
+            materialDialog = new MaterialDialog.Builder(mContext)
+                    .title(R.string.progress_download)
+                    .content(R.string.please_wait)
+                    .progress(true, 0)
+                    .show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bmpImg = null;
+            try {
+                bmpImg = Glide.with(mContext)
+                        .load(params[0])
+                        .asBitmap()
+                        .into(1920, 1080)// Width and height
+                        .get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return bmpImg;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(mContext);
+            try {
+                wallpaperManager.setBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                Toast.makeText(mContext, "Wallpaper has been set", Toast.LENGTH_SHORT).show();
+                materialDialog.dismiss();
+            }
+        }
     }
 }

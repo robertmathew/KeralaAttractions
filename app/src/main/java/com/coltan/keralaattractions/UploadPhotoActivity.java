@@ -207,7 +207,7 @@ public class UploadPhotoActivity extends AppCompatActivity implements
     //Uploading image to Firebase Storage
     private void uploadImage() {
         final MaterialDialog progressDialog = new MaterialDialog.Builder(mContext)
-                .title(R.string.progress_dialog)
+                .title(R.string.progress_upload)
                 .content(R.string.please_wait)
                 .cancelable(false)
                 .progress(true, 0)
