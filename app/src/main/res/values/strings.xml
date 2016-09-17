@@ -9,8 +9,14 @@
     <string name="no_connection">No network connection!</string>
     <string name="upload">Upload</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
     <string name="image">Image</string>
 
+    <string name="prefs_auth_file" translatable="false">authFile</string>
+    <string name="prefs_is_auth" translatable="false">isAuth</string>
+
+    <string name="msg_sign_out">You have successfully sign out</string>
+    <string name="msg_sign_required">You need to Sign in to upload photo</string>
     <string name="progress_dialog">Uploading</string>
     <string name="please_wait">Please wait</string>
 

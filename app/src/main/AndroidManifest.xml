@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".UploadPhotoActivity" />
-        <activity android:name=".SignInActivity" />
         <activity
             android:name=".DetailActivity"
             android:label="" />

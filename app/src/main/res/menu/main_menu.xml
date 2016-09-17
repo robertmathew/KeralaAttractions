@@ -4,5 +4,9 @@
     <item
         android:id="@+id/upload"
         android:title="@string/upload"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/signin"
+        android:title="@string/sign_in"
+        app:showAsAction="never" />
 </menu>

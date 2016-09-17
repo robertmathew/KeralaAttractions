@@ -48,4 +48,11 @@
              Extend the AppCompat dark Action Bar overlay as this contains text styling. -->
     </style>
 
+    <style name="SignInTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/toolbar</item>
+        <item name="colorPrimaryDark">@color/immersive_bars</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background_super_dark</item>
+    </style>
+
 </resources>

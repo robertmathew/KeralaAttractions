@@ -3,6 +3,7 @@ package com.coltan.keralaattractions;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,6 +43,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
+
+import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class UploadPhotoActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -87,8 +91,15 @@ public class UploadPhotoActivity extends AppCompatActivity implements
 
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setProviders(
+                                    AuthUI.GOOGLE_PROVIDER,
+                                    AuthUI.FACEBOOK_PROVIDER)
+                            .setTheme(R.style.SignInTheme)
+                            .build(),
+                    RC_SIGN_IN);
             return;
         } else {
             mUsernameId = mFirebaseUser.getUid();
@@ -166,6 +177,22 @@ public class UploadPhotoActivity extends AppCompatActivity implements
                 imageUri = resultData.getData();
                 Log.i(TAG, "Uri: " + imageUri.toString());
                 showImage(imageUri);
+            }
+        }
+
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                Log.d(TAG, "onActivityResult: User signed in");
+                SharedPreferences sharedPrefAuth = getSharedPreferences(getString(R.string.prefs_auth_file), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPrefAuth.edit();
+                editor.putBoolean(getString(R.string.prefs_is_auth), true);
+                editor.commit();
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+                Log.d(TAG, "onActivityResult:  User didn't signed in");
+                Toast.makeText(mContext, getString(R.string.msg_sign_required), Toast.LENGTH_LONG).show();
             }
         }
     }

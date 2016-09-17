@@ -2,9 +2,11 @@ package com.coltan.keralaattractions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +20,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ActionMenuView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coltan.keralaattractions.ui.GridMarginDecoration;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +36,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private PhotoAdapter photoAdapter;
 
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private SharedPreferences sharedPrefAuth;
+    private SharedPreferences.Editor editor;
 
     private Context mContext;
 
@@ -52,11 +67,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
 
+        //Auth shared preference
+        sharedPrefAuth = getSharedPreferences(getString(R.string.prefs_auth_file), Context.MODE_PRIVATE);
+        //editor = sharedPref.edit();
+        //editor.putBoolean(getString(R.string.prefs_is_auth), false);
+        //editor.commit();
+
         mRecyclerView = (RecyclerView) findViewById(R.id.image_grid);
         mProgressBar = (ProgressBar) findViewById(R.id.empty);
         tvConnection = (TextView) findViewById(R.id.noConnection);
 
-        if(!isNetworkConnected()){
+        if (!isNetworkConnected()) {
             tvConnection.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
@@ -65,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+
         photoList = new ArrayList<Photo>();
         keyList = new ArrayList<>();
         readDataFromFirebase();
@@ -75,6 +98,30 @@ public class MainActivity extends AppCompatActivity {
 
         setupRecyclerView();
         populateGrid();
+
+        firebaseAuth();
+    }
+
+    private void firebaseAuth() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                editor = sharedPrefAuth.edit();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged: signed_in:");
+                    editor.putBoolean(getString(R.string.prefs_is_auth), true);
+                    editor.commit();
+
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged: signed_out");
+                    editor.putBoolean(getString(R.string.prefs_is_auth), false);
+                    editor.commit();
+                }
+            }
+        };
     }
 
     private void readDataFromFirebase() {
@@ -152,14 +199,82 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem firebaseLogin = menu.findItem(R.id.signin);
+        if (firebaseLogin != null) {
+            boolean isAuth = sharedPrefAuth.getBoolean(getString(R.string.prefs_is_auth), false);
+            if (isAuth) {
+                firebaseLogin.setTitle(R.string.sign_out);
+            } else {
+                firebaseLogin.setTitle(R.string.sign_in);
+            }
+
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.upload:
                 Intent intent = new Intent(this, UploadPhotoActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.signin:
+                boolean isAuth = sharedPrefAuth.getBoolean(getString(R.string.prefs_is_auth), false);
+                if (isAuth) {
+                    AuthUI.getInstance()
+                            .signOut(this)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    // user is now signed out
+                                    //Log.d(TAG, "onComplete: User just sign out");
+                                    Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setProviders(
+                                            AuthUI.GOOGLE_PROVIDER,
+                                            AuthUI.FACEBOOK_PROVIDER)
+                                    .setTheme(R.style.SignInTheme)
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // user is signed in!
+                Log.d(TAG, "onActivityResult: User signed in");
+            } else {
+                // user is not signed in. Maybe just wait for the user to press
+                // "sign in" again, or show a message
+                Log.d(TAG, "onActivityResult:  User didn't signed in");
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
@@ -210,6 +325,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
+        return (cm.getActiveNetworkInfo() != null);
     }
 }
