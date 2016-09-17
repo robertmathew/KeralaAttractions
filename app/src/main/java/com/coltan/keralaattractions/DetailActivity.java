@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     public static final String PHOTOS_CHILD = "photos";
     public static final String COMMENT_CHILD = "comments";
+    public static final String LIKE_CHILD = "likes";
 
     private String mUsername;
     private String mUserId;
@@ -83,6 +85,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     private ImageButton btnSendComment;
     private Context mContext;
+    private boolean isPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,9 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
         // Initialize Firebase Measurement.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        //Firebase Database
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         if (mFirebaseUser != null) {
             mUsername = mFirebaseUser.getDisplayName();
@@ -118,7 +124,24 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         TextView tvDescription = (TextView) findViewById(R.id.description);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
-        Button btnLike = (Button) findViewById(R.id.action_like);
+        final Button btnLike = (Button) findViewById(R.id.action_like);
+        isPressed = false;
+        btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Changing the favorite button
+                if (isPressed) {
+                    btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
+                            R.drawable.heart_outline, 0, 0);
+                } else {
+                    btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
+                            R.drawable.heart, 0, 0);
+                }
+                isPressed = !isPressed;
+                Like like = new Like(mUserId);
+                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
+            }
+        });
         Button btnWallpaper = (Button) findViewById(R.id.action_set_wallpaper);
         btnWallpaper.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +206,6 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Comment, CommentViewHolder>(
                 Comment.class,
                 R.layout.detail_comment,
