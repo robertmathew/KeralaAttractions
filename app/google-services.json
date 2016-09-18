@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "295015287806",
+    "firebase_url": "https://keralaattractions-fd4fe.firebaseio.com",
+    "project_id": "keralaattractions-fd4fe",
+    "storage_bucket": "keralaattractions-fd4fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295015287806:android:7ae0dcdb66fefb5d",
+        "android_client_info": {
+          "package_name": "com.coltan.keralaattractions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295015287806-r0k9lcum348upk5admqt8b32il593na0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coltan.keralaattractions",
+            "certificate_hash": "AB4E2279D940DDC14FDA3EBB0F6B1F3A6B6A8270"
+          }
+        },
+        {
+          "client_id": "295015287806-tckf40keohs353un477rndo35i6rmjg2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coltan.keralaattractions",
+            "certificate_hash": "0D56DBFB869BC13A771C5D1995E2562209237148"
+          }
+        },
+        {
+          "client_id": "295015287806-qkblcrdsbfu76eg862ov8d4umt65h59t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWA6NBPd8krlWXF8xAqMovofa-JWX4HlE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "295015287806-qkblcrdsbfu76eg862ov8d4umt65h59t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
