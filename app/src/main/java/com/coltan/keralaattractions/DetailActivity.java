@@ -140,8 +140,10 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                             R.drawable.heart, 0, 0);
                 }
                 isPressed = !isPressed;
-                Like like = new Like(mUserId);
-                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
+                if (mFirebaseUser != null) {
+                    Like like = new Like(mUserId);
+                    mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
+                }
 
                 //Adding to database for widgets
                 ContentValues photoInfoValues = new ContentValues();
@@ -219,10 +221,14 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 String strComment = edComment.getText().toString();
                 String datetime = new Date().toString();
                 String millis = String.valueOf(System.currentTimeMillis());
-                Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
-                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD).push().setValue(comment);
+                if (mFirebaseUser != null) {
+                    Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
+                    mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD).push().setValue(comment);
+                    mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
+                } else {
+                    Toast.makeText(mContext, getString(R.string.msg_sign_comment), Toast.LENGTH_SHORT).show();
+                }
                 edComment.setText("");
-                mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
 
             }
         });
