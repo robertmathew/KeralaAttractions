@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "295015287806-vqh1ggqtqb5olkvkumd1cmr4f53e9c5r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coltan.keralaattractions",
+            "certificate_hash": "59AFB72BFFC769F3DF2D3C2D1C76A199467C492C"
+          }
+        },
+        {
+          "client_id": "295015287806-cc7huvgaelg7kiq1np3o5cilkipho2gh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coltan.keralaattractions",
+            "certificate_hash": "D7032456A46B11EB2AF172CA5E87EE5690ED261E"
+          }
+        },
+        {
           "client_id": "295015287806-r0k9lcum348upk5admqt8b32il593na0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
