@@ -1,6 +1,7 @@
 package com.coltan.keralaattractions.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -19,6 +20,7 @@ public class PhotoProvider extends ContentProvider {
 
     /* Codes for the UriMatcher */
     private static final int PHOTO = 100;
+    private static final int PHOTO_WITH_ID = 101;
 
     private static UriMatcher buildUriMatcher() {
         // Build a UriMatcher by adding a specific code to return based on a match
@@ -28,6 +30,7 @@ public class PhotoProvider extends ContentProvider {
 
         // Photo
         matcher.addURI(authority, PhotoContract.PATH_PHOTO, PHOTO);
+        matcher.addURI(authority, PhotoContract.PATH_PHOTO + "/#", PHOTO_WITH_ID);
 
         return matcher;
     }
@@ -54,6 +57,17 @@ public class PhotoProvider extends ContentProvider {
                         null,
                         sortOrder);
                 return cursor;
+            // "photo/*"
+            case PHOTO_WITH_ID:
+                cursor = mOpenHelper.getReadableDatabase().query(
+                        PhotoContract.PhotoEntry.TABLE_NAME,
+                        projection,
+                        PhotoContract.PhotoEntry._ID + " = ?",
+                        new String[]{String.valueOf(ContentUris.parseId(uri))},
+                        null,
+                        null,
+                        sortOrder);
+                return cursor;
             default:
                 // By default, we assume a bad URI
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -68,6 +82,9 @@ public class PhotoProvider extends ContentProvider {
         switch (match) {
             case PHOTO: {
                 return PhotoContract.PhotoEntry.CONTENT_TYPE;
+            }
+            case PHOTO_WITH_ID: {
+                return PhotoContract.PhotoEntry.CONTENT_ITEM_TYPE;
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

@@ -3,10 +3,14 @@ package com.coltan.keralaattractions;
 import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +47,8 @@ import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -62,6 +67,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private static final String TAG = "DetailActivity";
+
+    private static final int PHOTO_LOADER_ID = 0;
 
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     public static final String PHOTOS_CHILD = "photos";
@@ -85,11 +92,16 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private Context mContext;
     private boolean isPressed;
 
+    private String photoKey;
+    private Boolean likePhotoExist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         mContext = this;
+
+        likePhotoExist = false;
 
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -113,8 +125,10 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .build();
 
         final Photo photo = getIntent().getExtras().getParcelable("photo");
-        final String photoKey = getIntent().getExtras().getString("key");
+        photoKey = getIntent().getExtras().getString("key");
         //Log.d(TAG, "onCreate: " + photoKey);
+
+        getSupportLoaderManager().initLoader(PHOTO_LOADER_ID, null, this);
 
         final ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
         TextView tvTitle = (TextView) findViewById(R.id.title);
@@ -141,24 +155,26 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                     mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
                 }
 
-                //Adding to database for widgets
-                ContentValues photoInfoValues = new ContentValues();
-                photoInfoValues.put(PhotoContract.PhotoEntry._ID, photoKey);
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_NAME, photo.getAuthorName());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_ID, photo.getAuthorId());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_PHOTO_URL, photo.getAuthorPhotoUrl());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TITLE, photo.getTitle());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PLACE, photo.getPlace());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DESCRIPTION, photo.getDescription());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO, photo.getPhoto());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO_REF, photo.getPhotoRef());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DATE, photo.getDate());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TIMESTAMP, photo.getTimestamp());
-                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_INVERTED_TIMESTAMP, photo.getInvertedTimestamp());
-                Log.d(TAG, "onClick: " + PhotoContract.PhotoEntry.CONTENT_URI);
-                getContentResolver()
-                        .insert(PhotoContract.PhotoEntry.CONTENT_URI, photoInfoValues);
-                Log.d(TAG, "Content Provider added photo info to database");
+                //Added to database only if previous not added
+                if (!likePhotoExist) {
+                    ContentValues photoInfoValues = new ContentValues();
+                    photoInfoValues.put(PhotoContract.PhotoEntry._ID, photoKey);
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_NAME, photo.getAuthorName());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_ID, photo.getAuthorId());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_PHOTO_URL, photo.getAuthorPhotoUrl());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TITLE, photo.getTitle());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PLACE, photo.getPlace());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DESCRIPTION, photo.getDescription());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO, photo.getPhoto());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO_REF, photo.getPhotoRef());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DATE, photo.getDate());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TIMESTAMP, photo.getTimestamp());
+                    photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_INVERTED_TIMESTAMP, photo.getInvertedTimestamp());
+                    Log.d(TAG, "onClick: " + PhotoContract.PhotoEntry.CONTENT_URI);
+                    getContentResolver()
+                            .insert(PhotoContract.PhotoEntry.CONTENT_URI, photoInfoValues);
+                    Log.d(TAG, "Content Provider added photo info to database");
+                }
             }
         });
         Button btnWallpaper = (Button) findViewById(R.id.action_set_wallpaper);
@@ -318,5 +334,36 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 materialDialog.dismiss();
             }
         }
+    }
+
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        if (id == PHOTO_LOADER_ID) {
+            CursorLoader loader = new CursorLoader(this,
+                    PhotoContract.PhotoEntry.CONTENT_URI,
+                    null,
+                    PhotoContract.PhotoEntry._ID + " = ?",
+                    new String[]{photoKey},
+                    null);
+            return loader;
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (loader.getId() == PHOTO_LOADER_ID) {
+            if (data.getCount() == 0) {
+                likePhotoExist = false;
+            } else {
+                likePhotoExist = true;
+            }
+            Log.d(TAG, "onLoadFinished: Finished");
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
     }
 }
