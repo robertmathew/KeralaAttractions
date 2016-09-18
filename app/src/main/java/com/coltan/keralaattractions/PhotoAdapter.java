@@ -1,7 +1,9 @@
 package com.coltan.keralaattractions;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     private ArrayList<Photo> mDataset;
     private ArrayList<String> mKeyList;
     private Context mContext;
+    private Activity mActivity;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -42,10 +46,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PhotoAdapter(ArrayList<Photo> myDataset, ArrayList<String> keyList, Context context) {
+    public PhotoAdapter(ArrayList<Photo> myDataset, ArrayList<String> keyList, Context context, Activity activity) {
         mDataset = myDataset;
         mKeyList = keyList;
         mContext = context;
+        mActivity = activity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -63,7 +68,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Photo photo = mDataset.get(position);
@@ -73,6 +78,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 .load(photo.getPhoto())
                 .thumbnail(0.1f)
                 .placeholder(R.color.placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mImageView);
         holder.mTextView.setText(photo.getTitle());
 
@@ -80,9 +86,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mContext, DetailActivity.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(mActivity, holder.mImageView, mContext.getString(R.string.transition_photo));
                 i.putExtra("photo", photo);
                 i.putExtra("key", photoKey);
-                mContext.startActivity(i);
+                mContext.startActivity(i, options.toBundle());
             }
         });
     }

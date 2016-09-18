@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateGrid() {
-        photoAdapter = new PhotoAdapter(photoList, keyList, mContext);
+        photoAdapter = new PhotoAdapter(photoList, keyList, mContext, MainActivity.this);
         mRecyclerView.setAdapter(photoAdapter);
     }
 

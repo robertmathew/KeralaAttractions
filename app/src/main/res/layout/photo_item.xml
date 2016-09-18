@@ -21,5 +21,6 @@
         android:paddingEnd="@dimen/padding_normal"
         android:paddingStart="@dimen/padding_normal"
         android:paddingTop="@dimen/padding_small"
-        android:textColor="@color/placeholder" />
+        android:textColor="@color/placeholder"
+        android:transitionName="@string/transition_photo" />
 </FrameLayout>

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.coltan.keralaattractions.data.PhotoContract;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.auth.api.Auth;
@@ -171,6 +172,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         Glide.with(this)
                 .load(photo.getPhoto())
                 .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imgPhoto);
 
         tvTitle.setText(photo.getTitle());

@@ -19,6 +19,7 @@
             android:contentDescription="@string/image"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
+            android:transitionName="@string/transition_photo"
             app:layout_constraintDimensionRatio="4:3"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"

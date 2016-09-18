@@ -18,6 +18,8 @@
     <string name="prefs_auth_file" translatable="false">authFile</string>
     <string name="prefs_is_auth" translatable="false">isAuth</string>
 
+    <string name="transition_photo" translatable="false">transition_photo</string>
+
     <string name="msg_sign_out">You have successfully sign out</string>
     <string name="msg_sign_required">You need to Sign in to upload photo</string>
     <string name="msg_sign_comment">You need to Sign in to comment</string>
