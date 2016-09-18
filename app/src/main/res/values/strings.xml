@@ -25,6 +25,7 @@
     <string name="please_wait">Please wait</string>
 
     <string name="failed_upload">Failed to upload!</string>
+    <string name="empty_text_view">Empty Text</string>
 
     <string name="authority" translatable="false">com.coltan.keralaattractions</string>
 </resources>
