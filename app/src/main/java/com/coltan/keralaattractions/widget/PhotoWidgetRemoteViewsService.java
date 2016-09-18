@@ -92,7 +92,7 @@ class PhotoRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
                     .load(photo)
                     .asBitmap()
                     .centerCrop()
-                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .into(500, 500)
                     .get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
