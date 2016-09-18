@@ -16,6 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/image"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="4:3"
@@ -171,6 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/background_light"
+                    android:contentDescription="@string/send_comment"
                     app:srcCompat="@drawable/ic_send_black_24dp" />
             </LinearLayout>
 

@@ -5,22 +5,16 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.AppWidgetTarget;
-import com.coltan.keralaattractions.DetailActivity;
 import com.coltan.keralaattractions.R;
 import com.coltan.keralaattractions.data.PhotoContract;
-import com.coltan.keralaattractions.data.PhotoProvider;
 
 /**
  * Created by robo on 18/9/16.

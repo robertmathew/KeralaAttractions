@@ -10,11 +10,8 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.AppWidgetTarget;
-import com.bumptech.glide.request.target.Target;
 import com.coltan.keralaattractions.R;
 import com.coltan.keralaattractions.data.PhotoContract;
-import com.coltan.keralaattractions.data.PhotoProvider;
 
 import java.util.concurrent.ExecutionException;
 

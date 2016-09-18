@@ -13,6 +13,7 @@
     <string name="image">Image</string>
     <string name="like">Like</string>
     <string name="wallpaper">Wallpaper</string>
+    <string name="send_comment">Send comment</string>
 
     <string name="prefs_auth_file" translatable="false">authFile</string>
     <string name="prefs_is_auth" translatable="false">isAuth</string>
