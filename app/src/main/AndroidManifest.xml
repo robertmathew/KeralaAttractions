@@ -12,6 +12,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Attractions">
+        <provider
+            android:name=".data.PhotoProvider"
+            android:authorities="@string/authority"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

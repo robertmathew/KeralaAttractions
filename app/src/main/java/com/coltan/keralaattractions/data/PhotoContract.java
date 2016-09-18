@@ -24,8 +24,6 @@ public class PhotoContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PHOTO;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PHOTO;
 
         // Table name
         public static final String TABLE_NAME = "photo";
@@ -44,7 +42,7 @@ public class PhotoContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_INVERTED_TIMESTAMP = "inverted_timestamp";
 
-        public static Uri buildMovieUri(long id) {
+        public static Uri buildPhotoUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }

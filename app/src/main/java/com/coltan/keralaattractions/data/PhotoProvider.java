@@ -85,7 +85,7 @@ public class PhotoProvider extends ContentProvider {
             case PHOTO: {
                 long _id = db.insert(PhotoContract.PhotoEntry.TABLE_NAME, null, values);
                 if (_id > 0)
-                    returnUri = PhotoContract.PhotoEntry.buildMovieUri(_id);
+                    returnUri = PhotoContract.PhotoEntry.buildPhotoUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;

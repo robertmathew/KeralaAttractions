@@ -1,6 +1,7 @@
 package com.coltan.keralaattractions;
 
 import android.app.WallpaperManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.coltan.keralaattractions.data.PhotoContract;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -140,6 +142,25 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 isPressed = !isPressed;
                 Like like = new Like(mUserId);
                 mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
+
+                //Adding to database for widgets
+                ContentValues photoInfoValues = new ContentValues();
+                photoInfoValues.put(PhotoContract.PhotoEntry._ID, photoKey);
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_NAME, photo.getAuthorName());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_ID, photo.getAuthorId());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_PHOTO_URL, photo.getAuthorPhotoUrl());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TITLE, photo.getTitle());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PLACE, photo.getPlace());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DESCRIPTION, photo.getDescription());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO, photo.getPhoto());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_PHOTO_REF, photo.getPhotoRef());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_DATE, photo.getDate());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_TIMESTAMP, photo.getTimestamp());
+                photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_INVERTED_TIMESTAMP, photo.getInvertedTimestamp());
+                Log.d(TAG, "onClick: " + PhotoContract.PhotoEntry.CONTENT_URI);
+                getContentResolver()
+                        .insert(PhotoContract.PhotoEntry.CONTENT_URI, photoInfoValues);
+                Log.d(TAG, "Content Provider added photo info to database");
             }
         });
         Button btnWallpaper = (Button) findViewById(R.id.action_set_wallpaper);
