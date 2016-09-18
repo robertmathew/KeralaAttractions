@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:minWidth="500dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/activity_detail"
@@ -18,7 +19,7 @@
             android:adjustViewBounds="true"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintDimensionRatio="H,4:3"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -32,7 +33,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="34dp" />
+            tools:layout_editor_absoluteY="25dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -99,7 +100,7 @@
 
         <LinearLayout
             android:id="@+id/linear_action"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_marginEnd="16dp"
@@ -134,7 +135,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"

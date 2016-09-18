@@ -45,7 +45,8 @@
         <activity android:name=".UploadPhotoActivity" />
         <activity
             android:name=".DetailActivity"
-            android:label="" />
+            android:label=""
+            android:theme="@style/Attractions.Detail"/>
     </application>
 
 </manifest>

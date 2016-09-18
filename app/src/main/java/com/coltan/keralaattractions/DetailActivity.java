@@ -134,10 +134,10 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 //Changing the favorite button
                 if (isPressed) {
                     btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
-                            R.drawable.heart_outline, 0, 0);
+                            R.drawable.ic_action_favorite_outline, 0, 0);
                 } else {
                     btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
-                            R.drawable.heart, 0, 0);
+                            R.drawable.ic_action_favorite, 0, 0);
                 }
                 isPressed = !isPressed;
                 if (mFirebaseUser != null) {
