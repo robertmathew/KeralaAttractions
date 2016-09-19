@@ -314,9 +314,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                         .asBitmap()
                         .into(1920, 1080)// Width and height
                         .get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             return bmpImg;
@@ -330,7 +328,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                Toast.makeText(mContext, "Wallpaper has been set", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.msg_wallpaper_set), Toast.LENGTH_SHORT).show();
                 materialDialog.dismiss();
             }
         }
