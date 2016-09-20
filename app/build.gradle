@@ -54,8 +54,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.google.android.gms:play-services-auth:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
-    compile 'com.firebaseui:firebase-ui-database:0.5.3'
-    compile 'com.firebaseui:firebase-ui-auth:0.5.3'
+    compile 'com.firebaseui:firebase-ui:0.5.3'
 }
 
 
