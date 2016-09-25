@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     private ArrayList<String> mKeyList;
     private Context mContext;
     private Activity mActivity;
+    private StorageReference storageRef;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -63,6 +67,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(v);
+
+        // Create a storage reference from app
+        storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://keralaattractions-fd4fe.appspot.com");
+
         return vh;
     }
 
@@ -74,11 +82,15 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         final Photo photo = mDataset.get(position);
         final String photoKey = mKeyList.get(position);
         Log.d(TAG, "onBindViewHolder: " + photoKey);
+
+        // Create a reference with an initial file path and name
+        StorageReference pathReference = storageRef.child(photo.getPhotoRef());
+
         Glide.with(holder.mImageView.getContext())
-                .load(photo.getPhoto())
-                .thumbnail(0.1f)
+                .using(new FirebaseImageLoader())
+                .load(pathReference)
                 .placeholder(R.color.placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.mImageView);
         holder.mTextView.setText(photo.getTitle());
 

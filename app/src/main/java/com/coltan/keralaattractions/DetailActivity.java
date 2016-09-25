@@ -32,6 +32,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.coltan.keralaattractions.data.PhotoContract;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +41,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.Date;
@@ -113,6 +116,9 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         //Firebase Database
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
+        //Firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
         if (mFirebaseUser != null) {
             mUsername = mFirebaseUser.getDisplayName();
             mUserId = mFirebaseUser.getUid();
@@ -185,10 +191,16 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
+        // Create a storage reference from app
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://keralaattractions-fd4fe.appspot.com");
+        // Create a reference with an initial file path and name
+        StorageReference pathReference = storageRef.child(photo.getPhotoRef());
+
         Glide.with(this)
-                .load(photo.getPhoto())
+                .using(new FirebaseImageLoader())
+                .load(pathReference)
                 .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(imgPhoto);
 
         tvTitle.setText(photo.getTitle());
