@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId 'com.coltan.keralaattractions'
         minSdkVersion 19
@@ -12,19 +12,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-    signingConfigs {
-        release {
-            storeFile file('../attractions-udacity.jks')
-            storePassword 'password'
-            keyAlias 'attraction-signed'
-            keyPassword '123456'
-        }
-    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     productFlavors {
@@ -43,7 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
 
     /* 3rd party dependencies */
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -51,10 +42,10 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
     /* Firebase dependencies */
-    compile 'com.google.firebase:firebase-database:9.6.0'
-    compile 'com.google.firebase:firebase-storage:9.6.0'
-    compile 'com.google.firebase:firebase-auth:9.6.0'
-    compile 'com.google.firebase:firebase-crash:9.6.0'
+    compile 'com.google.firebase:firebase-database:9.6.1'
+    compile 'com.google.firebase:firebase-storage:9.6.1'
+    compile 'com.google.firebase:firebase-auth:9.6.1'
+    compile 'com.google.firebase:firebase-crash:9.6.1'
     compile 'com.firebaseui:firebase-ui:0.6.0'
 }
 
