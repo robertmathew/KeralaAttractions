@@ -7,6 +7,7 @@
 
     <color name="placeholder">#ddd</color>
     <color name="grey_ripple">#8ddd</color>
+    <color name="mid_grey">#40808080</color>
     <color name="author_background">#66000000</color>
     <color name="page_margin">#eee</color>
 

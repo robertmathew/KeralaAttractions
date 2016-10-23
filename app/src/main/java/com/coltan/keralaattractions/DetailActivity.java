@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -142,6 +143,14 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         TextView tvDescription = (TextView) findViewById(R.id.description);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
+        ImageButton backButton = (ImageButton) findViewById(R.id.back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         final Button btnLike = (Button) findViewById(R.id.action_like);
         isPressed = false;
         btnLike.setOnClickListener(new View.OnClickListener() {
