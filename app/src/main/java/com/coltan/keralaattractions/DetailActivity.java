@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -226,12 +227,15 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
 
+        LinearLayout layoutComment = (LinearLayout) findViewById(R.id.linLayoutComment);
+        if (mFirebaseUser == null) {
+            layoutComment.setVisibility(View.GONE);
+        }
 
         final EditText edComment = (EditText) findViewById(R.id.edNewComment);
         edComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -245,7 +249,6 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         btnSendComment = (ImageButton) findViewById(R.id.sendCommentButton);
@@ -255,15 +258,10 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 String strComment = edComment.getText().toString();
                 String datetime = new Date().toString();
                 String millis = String.valueOf(System.currentTimeMillis());
-                if (mFirebaseUser != null) {
-                    Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
-                    mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD).push().setValue(comment);
-                    mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
-                } else {
-                    Toast.makeText(mContext, getString(R.string.msg_sign_comment), Toast.LENGTH_SHORT).show();
-                }
+                Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
+                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD).push().setValue(comment);
+                mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
                 edComment.setText("");
-
             }
         });
 

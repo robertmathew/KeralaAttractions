@@ -20,12 +20,21 @@
             android:contentDescription="@string/image"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="H,4:3"
+            app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@color/background_dark" />
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/mid_grey_ripple"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="50dp" />
 
         <!-- Dummy item to prevent EditView from receiving focus -->
         <LinearLayout
@@ -34,7 +43,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="25dp" />
+            tools:layout_editor_absoluteY="50dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -54,6 +63,7 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="sans-serif-condensed"
                 android:text="@string/title"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
         </LinearLayout>
@@ -101,7 +111,7 @@
 
         <LinearLayout
             android:id="@+id/linear_action"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnSpan="2"
             android:layout_marginEnd="16dp"
@@ -155,7 +165,7 @@
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/linLayoutComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -165,6 +175,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:hint="@string/write_comment"
                     android:inputType="text" />
 
                 <ImageButton
