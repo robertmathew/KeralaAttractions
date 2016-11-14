@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
+                                    .setLogo(R.drawable.icon)
                                     .setProviders(
                                             AuthUI.GOOGLE_PROVIDER,
                                             AuthUI.FACEBOOK_PROVIDER)

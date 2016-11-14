@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
         <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
         <item name="colorAccent">@color/accent</item>
-        <item name="android:navigationBarColor">@color/primary_super_dark</item>
+        <item name="android:navigationBarColor">@color/immersive_bars</item>
         <item name="android:statusBarColor">@color/background_super_dark</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
@@ -57,8 +57,8 @@
 
     <style name="SignInTheme" parent="FirebaseUI">
         <item name="colorPrimary">@color/toolbar</item>
-        <item name="android:statusBarColor">@color/immersive_bars</item>
+        <item name="colorPrimaryDark">@color/immersive_bars</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@drawable/bg_login</item>
+        <item name="android:windowBackground">@color/background_dark</item>
     </style>
 </resources>
