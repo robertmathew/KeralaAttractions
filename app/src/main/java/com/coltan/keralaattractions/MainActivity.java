@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -111,14 +112,12 @@ public class MainActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged: signed_in:");
                     editor.putBoolean(getString(R.string.prefs_is_auth), true);
-                    editor.commit();
-
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged: signed_out");
                     editor.putBoolean(getString(R.string.prefs_is_auth), false);
-                    editor.commit();
                 }
+                editor.apply();
             }
         };
     }
@@ -164,25 +163,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        GridLayoutManager gridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                /*switch (position % 6) {
-                    case 5:
-                        return 3;
-                    case 3:
-                        return 2;
-                    default:
-                        return 1;
-                }*/
-                return (position % 3 == 0 ? 2 : 1);
-            }
-        });
-        mRecyclerView.addItemDecoration(new GridMarginDecoration(
-                getResources().getDimensionPixelSize(R.dimen.grid_item_spacing)));
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.addItemDecoration(
+                new GridMarginDecoration(getResources().getDimensionPixelSize(R.dimen.grid_item_spacing)));
         mRecyclerView.setHasFixedSize(true);
-
     }
 
     private void populateGrid() {
@@ -207,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 firebaseLogin.setTitle(R.string.sign_in);
             }
-
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -222,27 +208,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.signin:
                 boolean isAuth = sharedPrefAuth.getBoolean(getString(R.string.prefs_is_auth), false);
                 if (isAuth) {
-                    AuthUI.getInstance()
-                            .signOut(this)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    // user is now signed out
-                                    //Log.d(TAG, "onComplete: User just sign out");
-                                    Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // user is now signed out
+                            //Log.d(TAG, "onComplete: User just sign out");
+                            Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setLogo(R.drawable.icon)
-                                    .setProviders(
-                                            AuthUI.GOOGLE_PROVIDER,
-                                            AuthUI.FACEBOOK_PROVIDER)
-                                    .setTheme(R.style.SignInTheme)
-                                    .build(),
-                            RC_SIGN_IN);
+                    startActivityForResult(AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setLogo(R.drawable.icon)
+                            .setProviders(AuthUI.GOOGLE_PROVIDER, AuthUI.FACEBOOK_PROVIDER)
+                            .setTheme(R.style.SignInTheme)
+                            .build(), RC_SIGN_IN);
                 }
                 return true;
             default:
@@ -318,8 +298,7 @@ public class MainActivity extends AppCompatActivity {
                     .scaleY(1f)
                     .setStartDelay(startDelay)
                     .setDuration(duration)
-                    .setInterpolator(AnimationUtils.loadInterpolator(this,
-                            android.R.interpolator.overshoot));
+                    .setInterpolator(AnimationUtils.loadInterpolator(this, android.R.interpolator.overshoot));
         }
     }
 
