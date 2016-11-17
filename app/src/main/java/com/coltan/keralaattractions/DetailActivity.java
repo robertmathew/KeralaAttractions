@@ -94,6 +94,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private MaterialDialog materialDialog;
 
     private ImageButton btnSendComment;
+    private ImageView imgPlace, imgDescription;
+    private TextView tvPlace, tvDescription;
     private Context mContext;
     private boolean isPressed;
 
@@ -140,8 +142,11 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
         final ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
         TextView tvTitle = (TextView) findViewById(R.id.title);
-        TextView tvPlace = (TextView) findViewById(R.id.place);
-        TextView tvDescription = (TextView) findViewById(R.id.description);
+
+        imgPlace = (ImageView) findViewById(R.id.place_icon);
+        tvPlace = (TextView) findViewById(R.id.place);
+        imgDescription = (ImageView) findViewById(R.id.description_icon);
+        tvDescription = (TextView) findViewById(R.id.description);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
         ImageButton backButton = (ImageButton) findViewById(R.id.back);
@@ -214,8 +219,9 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .into(imgPhoto);
 
         tvTitle.setText(photo.getTitle());
-        tvPlace.setText(photo.getPlace());
-        tvDescription.setText(photo.getDescription());
+
+        displayPlace(photo.getPlace());
+        displayDescription(photo.getDescription());
         tvAuthor.setText(photo.getAuthorName());
         Glide.with(this)
                 .load(photo.getAuthorPhotoUrl())
@@ -306,6 +312,25 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mFirebaseAdapter);
+    }
+
+    //If description text is empty then the views are gone
+    private void displayDescription(String description) {
+        if (description.equals("")){
+            imgDescription.setVisibility(View.GONE);
+            tvDescription.setVisibility(View.GONE);
+        } else {
+        tvDescription.setText(description);}
+    }
+
+    //If place text is empty then the views are gone
+    private void displayPlace(String place) {
+        if (place.equals("")) {
+            imgPlace.setVisibility(View.GONE);
+            tvPlace.setVisibility(View.GONE);
+        } else {
+            tvPlace.setText(place);
+        }
     }
 
     @Override
