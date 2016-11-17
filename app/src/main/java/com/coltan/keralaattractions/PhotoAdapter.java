@@ -92,7 +92,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 .placeholder(R.color.placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mImageView);
-        holder.mTextView.setText(photo.getTitle());
+        String titleAuthorString = String.format("By %1$s", photo.getAuthorName());
+        holder.mTextView.setText(titleAuthorString);
 
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

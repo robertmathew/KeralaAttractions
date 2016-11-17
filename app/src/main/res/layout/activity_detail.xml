@@ -33,8 +33,8 @@
             android:layout_height="56dp"
             android:background="@drawable/mid_grey_ripple"
             android:src="@drawable/ic_arrow_back_black_24dp"
-            tools:layout_editor_absoluteY="50dp"
-            tools:layout_editor_absoluteX="0dp" />
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="150dp" />
 
         <!-- Dummy item to prevent EditView from receiving focus -->
         <LinearLayout
@@ -43,7 +43,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="107dp" />
+            tools:layout_editor_absoluteY="207dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -63,8 +63,8 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/title"
                 android:fontFamily="sans-serif-condensed"
+                android:text="@string/title"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
         </LinearLayout>
 
@@ -104,6 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-condensed"
             android:text="@string/author"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
             app:layout_constraintRight_toLeftOf="@+id/authorPic"

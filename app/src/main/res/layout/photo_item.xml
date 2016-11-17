@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/image"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:transitionName="@string/transition_photo" />
 
     <TextView
         android:id="@+id/author"
@@ -16,11 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:background="@color/author_background"
+        android:fontFamily="sans-serif-condensed"
         android:lines="1"
         android:paddingBottom="@dimen/padding_small"
         android:paddingEnd="@dimen/padding_normal"
         android:paddingStart="@dimen/padding_normal"
         android:paddingTop="@dimen/padding_small"
-        android:textColor="@color/placeholder"
-        android:transitionName="@string/transition_photo" />
+        android:textColor="@color/placeholder" />
 </FrameLayout>
