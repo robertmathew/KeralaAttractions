@@ -90,7 +90,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 .using(new FirebaseImageLoader())
                 .load(pathReference)
                 .placeholder(R.color.placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mImageView);
         holder.mTextView.setText(photo.getTitle());
 

@@ -210,7 +210,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .using(new FirebaseImageLoader())
                 .load(pathReference)
                 .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imgPhoto);
 
         tvTitle.setText(photo.getTitle());
