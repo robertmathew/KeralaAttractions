@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -101,6 +102,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     private String photoKey;
     private Boolean likePhotoExist;
+    private int displayHeight, displayWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +138,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
         final Photo photo = getIntent().getExtras().getParcelable("photo");
         photoKey = getIntent().getExtras().getString("key");
-        //Log.d(TAG, "onCreate: " + photoKey);
 
+        getDisplayMetrics();
         getSupportLoaderManager().initLoader(PHOTO_LOADER_ID, null, this);
 
         final ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
@@ -333,6 +335,14 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
+    // Getting width and height phone screen to set wallpaper
+    private void getDisplayMetrics(){
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        displayHeight = metrics.heightPixels;
+        displayWidth = metrics.widthPixels;
+    }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed: Connection failed!");
@@ -356,7 +366,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 bmpImg = Glide.with(mContext)
                         .load(params[0])
                         .asBitmap()
-                        .into(1920, 1080)// Width and height
+                        .into(displayWidth, displayHeight)// Width and height
                         .get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
