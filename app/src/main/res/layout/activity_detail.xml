@@ -43,7 +43,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="332dp" />
+            tools:layout_editor_absoluteY="407dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -173,7 +173,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -197,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/write_comment"
-                    android:inputType="text" />
+                    android:inputType="textCapSentences" />
 
                 <ImageButton
                     android:id="@+id/sendCommentButton"
