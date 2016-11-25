@@ -267,7 +267,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 String datetime = new Date().toString();
                 String millis = String.valueOf(System.currentTimeMillis());
                 Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
-                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD).push().setValue(comment);
+                mFirebaseDatabaseReference.child(COMMENT_CHILD).child(photoKey).push().setValue(comment);
                 mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
                 edComment.setText("");
             }
@@ -277,7 +277,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 Comment.class,
                 R.layout.detail_comment,
                 CommentViewHolder.class,
-                mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(COMMENT_CHILD)) {
+                mFirebaseDatabaseReference.child(COMMENT_CHILD).child(photoKey)) {
 
             @Override
             protected void populateViewHolder(CommentViewHolder viewHolder, Comment comment, int position) {
