@@ -14,10 +14,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +32,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.coltan.keralaattractions.data.PhotoContract;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,35 +39,21 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
-
-    public static class CommentViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public CircleImageView mImageView;
-        public TextView mTvAuthorName;
-        public TextView mTvComment;
-        public TextView mTvTime;
-
-        public CommentViewHolder(View v) {
-            super(v);
-            mImageView = (CircleImageView) v.findViewById(R.id.authorImage);
-            mTvAuthorName = (TextView) v.findViewById(R.id.authorName);
-            mTvComment = (TextView) v.findViewById(R.id.comment);
-            mTvTime = (TextView) v.findViewById(R.id.time);
-        }
-    }
 
     private static final String TAG = "DetailActivity";
 
@@ -86,13 +69,15 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private String mPhotoUrl;
 
     private RecyclerView mRecyclerView;
-    private FirebaseRecyclerAdapter<Comment, CommentViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
     private MaterialDialog materialDialog;
+
+    private CommentAdapter mCommentAdapter;
+    private ArrayList<Comment> commentList;
 
     private ImageButton btnSendComment;
     private ImageView imgPlace, imgDescription;
@@ -230,11 +215,23 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .dontAnimate()
                 .into(imgAuthor);
 
+        /*
+        *   Comments RecyclerView   */
         mRecyclerView = (RecyclerView) findViewById(R.id.commentRecyclerView);
         mRecyclerView.setHasFixedSize(true);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
+        commentList = new ArrayList<>();
+        getCommentsFromFirebase();
+
+        mCommentAdapter = new CommentAdapter(commentList, mContext);
+        mRecyclerView.setAdapter(mCommentAdapter);
+
+
+        /*
+        *   Add comment    */
         LinearLayout layoutComment = (LinearLayout) findViewById(R.id.linLayoutComment);
         if (mFirebaseUser == null) {
             layoutComment.setVisibility(View.GONE);
@@ -273,56 +270,48 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Comment, CommentViewHolder>(
-                Comment.class,
-                R.layout.detail_comment,
-                CommentViewHolder.class,
-                mFirebaseDatabaseReference.child(COMMENT_CHILD).child(photoKey)) {
+    }
 
+    private void getCommentsFromFirebase() {
+        mFirebaseDatabaseReference.child("comments").child(photoKey).addChildEventListener(new ChildEventListener() {
             @Override
-            protected void populateViewHolder(CommentViewHolder viewHolder, Comment comment, int position) {
-                viewHolder.mTvAuthorName.setText(comment.getCommenterName());
-                viewHolder.mTvComment.setText(comment.getComment());
-                //viewHolder.messengerTextView.setText(friendlyMessage.getName());
-                if (comment.getCommenterPhotoUrl() != null) {
-                    Glide.with(DetailActivity.this)
-                            .load(comment.getCommenterPhotoUrl())
-                            .into(viewHolder.mImageView);
-                }
-                viewHolder.mTvTime.setText(
-                        DateUtils.getRelativeTimeSpanString(Long.parseLong(comment.getMillisecond()),
-                                System.currentTimeMillis(),
-                                DateUtils.SECOND_IN_MILLIS).toString().toLowerCase()
-                );
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Comment comment = dataSnapshot.getValue(Comment.class);
+                commentList.add(comment);
+
+                mCommentAdapter.notifyDataSetChanged();
             }
-        };
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int commentMessageCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (commentMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    mRecyclerView.scrollToPosition(positionStart);
-                }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
-
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     //If description text is empty then the views are gone
     private void displayDescription(String description) {
-        if (description.equals("")){
+        if (description.equals("")) {
             imgDescription.setVisibility(View.GONE);
             tvDescription.setVisibility(View.GONE);
         } else {
-        tvDescription.setText(description);}
+            tvDescription.setText(description);
+        }
     }
 
     //If place text is empty then the views are gone
@@ -336,7 +325,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     // Getting width and height phone screen to set wallpaper
-    private void getDisplayMetrics(){
+    private void getDisplayMetrics() {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         displayHeight = metrics.heightPixels;

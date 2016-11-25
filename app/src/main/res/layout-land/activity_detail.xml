@@ -197,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/write_comment"
-                    android:inputType="text" />
+                    android:inputType="textCapSentences" />
 
                 <ImageButton
                     android:id="@+id/sendCommentButton"
