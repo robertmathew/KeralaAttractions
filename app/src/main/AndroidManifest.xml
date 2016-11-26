@@ -11,8 +11,8 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Attractions">
 
@@ -33,7 +33,7 @@
         <service
             android:name=".widget.PhotoWidgetRemoteViewsService"
             android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".MainActivity"
@@ -45,11 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UploadPhotoActivity" />
+        <activity
+            android:name=".UploadPhotoActivity"
+            android:label="@string/upload"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DetailActivity"
             android:label=""
-            android:theme="@style/Attractions.Detail"/>
+            android:theme="@style/Attractions.Detail" />
     </application>
 
 </manifest>

@@ -15,6 +15,8 @@
     <string name="wallpaper">Wallpaper</string>
     <string name="send_comment">Send comment</string>
     <string name="write_comment">Write your comment</string>
+    <string name="error_title">Enter a title</string>
+    <string name="error_place">Enter a place</string>
 
     <!--Accessibility string-->
     <string name="content_description_back_button">Back button</string>

@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +75,11 @@ public class UploadPhotoActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_photo);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mContext = this;
 
         // Initialize Firebase Auth
@@ -121,11 +128,17 @@ public class UploadPhotoActivity extends AppCompatActivity implements
             }
         });
 
-        Button btnUpload = (Button) findViewById(R.id.upload);
-        btnUpload.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabUpload = (FloatingActionButton) findViewById(R.id.fabUpload);
+        fabUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadImage();
+                if ((edTitle.getText().toString()).equals("")) {
+                    edTitle.setError(getString(R.string.error_title));
+                } else if ((edPlace.getText().toString()).equals("")) {
+                    edPlace.setError(getString(R.string.error_place));
+                } else {
+                    uploadImage();
+                }
             }
         });
     }
@@ -133,6 +146,7 @@ public class UploadPhotoActivity extends AppCompatActivity implements
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */
+
     public void performFileSearch() {
 
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
