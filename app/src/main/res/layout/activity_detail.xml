@@ -43,7 +43,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="432dp" />
+            tools:layout_editor_absoluteY="482dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -169,10 +169,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -188,6 +184,8 @@
                 android:id="@+id/linLayoutComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <EditText
@@ -195,6 +193,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
                     android:hint="@string/write_comment"
                     android:inputType="textCapSentences" />
 
@@ -204,6 +204,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/background_light"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="8dp"
                     android:contentDescription="@string/send_comment"
                     app:srcCompat="@drawable/ic_send_black_24dp" />
             </LinearLayout>
