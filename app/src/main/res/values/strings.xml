@@ -16,6 +16,11 @@
     <string name="send_comment">Send comment</string>
     <string name="write_comment">Write your comment</string>
 
+    <!--Accessibility string-->
+    <string name="content_description_back_button">Back button</string>
+    <string name="content_description_place_icon">Place icon</string>
+    <string name="content_description_note_icon">Description icon</string>
+
     <string name="prefs_auth_file" translatable="false">authFile</string>
     <string name="prefs_is_auth" translatable="false">isAuth</string>
 

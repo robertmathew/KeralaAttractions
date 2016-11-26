@@ -32,18 +32,10 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@drawable/mid_grey_ripple"
+            android:contentDescription="@string/content_description_back_button"
             android:src="@drawable/ic_arrow_back_black_24dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Dummy item to prevent EditView from receiving focus -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="482dp" />
 
         <LinearLayout
             android:id="@+id/linear_title"
@@ -72,11 +64,12 @@
             android:id="@+id/place_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_place_black_24dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/linear_title"
             android:layout_marginStart="16dp"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/content_description_place_icon"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear_title"
+            app:srcCompat="@drawable/ic_place_black_24dp" />
 
         <TextView
             android:id="@+id/place"
@@ -94,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:contentDescription="@string/content_description_note_icon"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place_icon"
             app:srcCompat="@drawable/ic_speaker_notes_black_24dp" />
@@ -102,11 +96,11 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="@string/description"
             app:layout_constraintBottom_toBottomOf="@+id/description_icon"
-            app:layout_constraintTop_toTopOf="@+id/description_icon"
-            android:layout_marginStart="8dp"
-            app:layout_constraintLeft_toRightOf="@+id/description_icon" />
+            app:layout_constraintLeft_toRightOf="@+id/description_icon"
+            app:layout_constraintTop_toTopOf="@+id/description_icon" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/authorPic"
@@ -184,17 +178,17 @@
                 android:id="@+id/linLayoutComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/edNewComment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
                     android:hint="@string/write_comment"
                     android:inputType="textCapSentences" />
 
@@ -204,9 +198,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/background_light"
+                    android:contentDescription="@string/send_comment"
                     android:paddingEnd="16dp"
                     android:paddingStart="8dp"
-                    android:contentDescription="@string/send_comment"
                     app:srcCompat="@drawable/ic_send_black_24dp" />
             </LinearLayout>
 
