@@ -18,6 +18,7 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -81,7 +82,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         // - replace the contents of the view with that element
         final Photo photo = mDataset.get(position);
         final String photoKey = mKeyList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + photoKey);
 
         // Create a reference with an initial file path and name
         StorageReference pathReference = storageRef.child(photo.getPhotoRef());

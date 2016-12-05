@@ -3,6 +3,11 @@ package com.coltan.keralaattractions;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Robo on 25-08-2016.
  */
@@ -26,6 +31,8 @@ public class Photo implements Parcelable {
     private String tags;
     private String timestamp;
     private String invertedTimestamp;
+    public int starCount = 0;
+    public Map<String, Boolean> likes = new HashMap<>();
 
     public Photo() {
     }
@@ -159,6 +166,22 @@ public class Photo implements Parcelable {
         this.timestamp = timestamp;
     }
 
+    public int getStarCount() {
+        return starCount;
+    }
+
+    public void setStarCount(int starCount) {
+        this.starCount = starCount;
+    }
+
+    public Map<String, Boolean> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Map<String, Boolean> likes) {
+        this.likes = likes;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -177,6 +200,7 @@ public class Photo implements Parcelable {
         dest.writeString(date);
         dest.writeString(timestamp);
         dest.writeString(invertedTimestamp);
+        dest.writeInt(starCount);
 
     }
 
@@ -192,6 +216,7 @@ public class Photo implements Parcelable {
         date = in.readString();
         timestamp = in.readString();
         invertedTimestamp = in.readString();
+        starCount = in.readInt();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {

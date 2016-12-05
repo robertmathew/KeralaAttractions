@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -132,15 +133,22 @@ public class UploadPhotoActivity extends AppCompatActivity implements
         fabUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((edTitle.getText().toString()).equals("")) {
-                    edTitle.setError(getString(R.string.error_title));
-                } else if ((edPlace.getText().toString()).equals("")) {
-                    edPlace.setError(getString(R.string.error_place));
-                } else {
-                    uploadImage();
-                }
+                submitPhoto();
             }
         });
+    }
+
+    private void submitPhoto() {
+        if (TextUtils.isEmpty(edTitle.getText().toString())) {
+            edTitle.setError(getString(R.string.required));
+            return;
+        }
+        if (TextUtils.isEmpty(edPlace.getText().toString())) {
+            edPlace.setError(getString(R.string.required));
+            return;
+        }
+
+        uploadImage();
     }
 
     /**

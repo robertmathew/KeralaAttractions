@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,16 +45,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "DetailActivity";
 
@@ -82,8 +87,9 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private ImageButton btnSendComment;
     private ImageView imgPlace, imgDescription;
     private TextView tvPlace, tvDescription;
+    private Button btnLike;
     private Context mContext;
-    private boolean isPressed;
+    private boolean isLiked = false;
 
     private String photoKey;
     private Boolean likePhotoExist;
@@ -125,7 +131,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         photoKey = getIntent().getExtras().getString("key");
 
         getDisplayMetrics();
-        getSupportLoaderManager().initLoader(PHOTO_LOADER_ID, null, this);
+        /*getSupportLoaderManager().initLoader(PHOTO_LOADER_ID, null, this);*/
 
         final ImageView imgPhoto = (ImageView) findViewById(R.id.backdrop);
         TextView tvTitle = (TextView) findViewById(R.id.title);
@@ -144,27 +150,27 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        final Button btnLike = (Button) findViewById(R.id.action_like);
-        isPressed = false;
+        btnLike = (Button) findViewById(R.id.action_like);
+        final DatabaseReference globalRef = mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey);
+
+        alreadyLiked(globalRef);
+        changeLikeButton();
+
         btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Changing the favorite button
-                if (isPressed) {
-                    btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
-                            R.drawable.ic_action_favorite_outline, 0, 0);
-                } else {
-                    btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
-                            R.drawable.ic_action_favorite, 0, 0);
-                }
-                isPressed = !isPressed;
+                //Log.d(TAG, "onClick: " + mUserId);
+                //Log.d(TAG, "onClick: " + photo.getLikes().toString());
+                isLiked = !isLiked;
+                changeLikeButton();
                 if (mFirebaseUser != null) {
-                    Like like = new Like(mUserId);
-                    mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey).child(LIKE_CHILD).push().setValue(like);
+                    Log.d(TAG, "onClick: User not null");
+                    onLikeClicked(globalRef);
                 }
 
                 //Added to database only if previous not added
-                if (!likePhotoExist) {
+                /*if (!likePhotoExist) {
                     ContentValues photoInfoValues = new ContentValues();
                     photoInfoValues.put(PhotoContract.PhotoEntry._ID, photoKey);
                     photoInfoValues.put(PhotoContract.PhotoEntry.COLUMN_AUTHOR_NAME, photo.getAuthorName());
@@ -182,7 +188,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                     getContentResolver()
                             .insert(PhotoContract.PhotoEntry.CONTENT_URI, photoInfoValues);
                     Log.d(TAG, "Content Provider added photo info to database");
-                }
+                }*/
             }
         });
         Button btnWallpaper = (Button) findViewById(R.id.action_set_wallpaper);
@@ -272,6 +278,69 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     }
 
+    private void changeLikeButton() {
+        if (isLiked) {
+            btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
+                    R.drawable.ic_action_favorite, 0, 0);
+        } else {
+            btnLike.setCompoundDrawablesWithIntrinsicBounds(0,
+                    R.drawable.ic_action_favorite_outline, 0, 0);
+        }
+    }
+
+    private void alreadyLiked(DatabaseReference databaseReference) {
+        databaseReference.child(LIKE_CHILD).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    Map<String, Boolean> likes = (HashMap<String, Boolean>) dataSnapshot.getValue();
+                    isLiked = likes.containsKey(mUserId);
+                    Log.d(TAG, "onDataChange: " + isLiked);
+                    changeLikeButton();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void onLikeClicked(final DatabaseReference likeRef) {
+        likeRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Photo p = mutableData.getValue(Photo.class);
+                if (p == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                if (p.likes.containsKey(mUserId)) {
+                    // Unlike the photo and remove self from likes
+                    p.starCount = p.starCount - 1;
+                    p.likes.remove(mUserId);
+                    Log.d(TAG, "doTransaction: Unlike");
+                } else {
+                    // Like the photo
+                    Log.d(TAG, "doTransaction: Like");
+                    p.starCount = p.starCount + 1;
+                    p.likes.put(mUserId, true);
+                }
+                // Set value and report transaction success
+                mutableData.setValue(p);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
     private void getCommentsFromFirebase() {
         mFirebaseDatabaseReference.child("comments").child(photoKey).addChildEventListener(new ChildEventListener() {
             @Override
@@ -306,7 +375,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     //If description text is empty then the views are gone
     private void displayDescription(String description) {
-        if (description.equals("")) {
+        if (TextUtils.isEmpty(description)) {
             imgDescription.setVisibility(View.GONE);
             tvDescription.setVisibility(View.GONE);
         } else {
@@ -316,7 +385,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     //If place text is empty then the views are gone
     private void displayPlace(String place) {
-        if (place.equals("")) {
+        if (TextUtils.isEmpty(place)) {
             imgPlace.setVisibility(View.GONE);
             tvPlace.setVisibility(View.GONE);
         } else {
@@ -377,7 +446,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    @Override
+    /*@Override
     public Loader onCreateLoader(int id, Bundle args) {
         if (id == PHOTO_LOADER_ID) {
             CursorLoader loader = new CursorLoader(this,
@@ -406,5 +475,5 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onLoaderReset(Loader loader) {
 
-    }
+    }*/
 }
