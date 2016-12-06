@@ -58,7 +58,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         Comment comment = mDataset.get(position);
         holder.mNameTextView.setText(comment.getCommenterName());
         holder.mCommentTextView.setText(comment.getComment());
-        //viewHolder.messengerTextView.setText(friendlyMessage.getName());
         if (comment.getCommenterPhotoUrl() != null) {
             Glide.with(mContext)
                     .load(comment.getCommenterPhotoUrl())

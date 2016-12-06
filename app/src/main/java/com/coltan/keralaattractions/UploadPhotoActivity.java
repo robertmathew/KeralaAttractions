@@ -38,6 +38,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
@@ -92,12 +93,10 @@ public class UploadPhotoActivity extends AppCompatActivity implements
 
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setProviders(
-                                    AuthUI.GOOGLE_PROVIDER,
-                                    AuthUI.FACEBOOK_PROVIDER)
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
+                            .setProviders(Arrays.asList(
+                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                             .setTheme(R.style.SignInTheme)
                             .build(),
                     RC_SIGN_IN);
@@ -156,21 +155,13 @@ public class UploadPhotoActivity extends AppCompatActivity implements
      */
 
     public void performFileSearch() {
-
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-
         // Filter to only show results that can be "opened", such as a
         // file (as opposed to a list of contacts or timezones)
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        // Filter to show only images, using the image MIME data type.
-        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-        // To search for all documents available via installed storage providers,
-        // it would be "*/*".
         intent.setType("image/*");
-
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
@@ -246,8 +237,6 @@ public class UploadPhotoActivity extends AppCompatActivity implements
 
         // Upload file and metadata to the path 'images/mountains.jpg'
         UploadTask uploadTask = mountainsRef.putFile(imageUri, metadata);
-        //Uri imageUri = uploadTask.getSnapshot().getDownloadUrl();
-        //Log.d(TAG, "uploadImage: Download Uri" + imageUri);
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -288,8 +277,6 @@ public class UploadPhotoActivity extends AppCompatActivity implements
         String place = edPlace.getText().toString();
         String description = edDescription.getText().toString();
         String invertedDate = String.valueOf(-1 * new Date().getTime());
-        //Log.d(TAG, "Data: " + mUsername + " " + mUsernameId + " " + mPhotoUrl);
-        //Log.d(TAG, "Data: " + title + " " + place);
 
         photo = new Photo(mUsername, mUsernameId, mPhotoUrl, title, place, description, downloadUri,
                 photoPath, datetime, String.valueOf(millis), invertedDate);

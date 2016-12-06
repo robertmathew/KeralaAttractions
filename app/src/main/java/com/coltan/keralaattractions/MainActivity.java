@@ -36,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
 
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // A new photo has been added, add it to the displayed list
-                //Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
                 keyList.add(dataSnapshot.getKey());
                 Photo photo = dataSnapshot.getValue(Photo.class);
                 photoList.add(photo);
@@ -212,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             // user is now signed out
-                            //Log.d(TAG, "onComplete: User just sign out");
                             Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -220,7 +219,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setLogo(R.drawable.icon)
-                            .setProviders(AuthUI.GOOGLE_PROVIDER, AuthUI.FACEBOOK_PROVIDER)
+                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                             .setTheme(R.style.SignInTheme)
                             .build(), RC_SIGN_IN);
                 }
