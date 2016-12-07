@@ -33,7 +33,9 @@
         <activity
             android:name=".DetailActivity"
             android:label=""
-            android:theme="@style/Attractions.Detail" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Attractions.Detail"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

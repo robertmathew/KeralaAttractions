@@ -1,20 +1,26 @@
 package com.coltan.keralaattractions;
 
+import android.app.Service;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -82,6 +88,7 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
     private ImageView imgPlace, imgDescription;
     private TextView tvPlace, tvDescription;
     private Button btnLike;
+    private EditText edComment;
     private Context mContext;
     private boolean isLiked = false;
 
@@ -118,8 +125,17 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         final Photo photo = getIntent().getExtras().getParcelable("photo");
         photoKey = getIntent().getExtras().getString("key");
+
+        /*CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(photo.getTitle());*/
 
         getDisplayMetrics();
 
@@ -132,13 +148,21 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         tvDescription = (TextView) findViewById(R.id.description);
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
-        ImageButton backButton = (ImageButton) findViewById(R.id.back);
+
+        /*ImageButton backButton = (ImageButton) findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
-        });
+        });*/
+
+
+        LinearLayout bottomSheetViewgroup
+                = (LinearLayout) findViewById(R.id.linLayoutComment);
+
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
+
 
         btnLike = (Button) findViewById(R.id.action_like);
         final DatabaseReference globalRef = mFirebaseDatabaseReference.child(PHOTOS_CHILD).child(photoKey);
@@ -205,12 +229,11 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
         /*
         *   Add comment    */
-        LinearLayout layoutComment = (LinearLayout) findViewById(R.id.linLayoutComment);
         if (mFirebaseUser == null) {
-            layoutComment.setVisibility(View.GONE);
+            bottomSheetViewgroup.setVisibility(View.GONE);
         }
 
-        final EditText edComment = (EditText) findViewById(R.id.edNewComment);
+        edComment = (EditText) findViewById(R.id.edNewComment);
         edComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -411,5 +434,13 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 materialDialog.dismiss();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (edComment.isFocused()) {
+
+        }
+        super.onBackPressed();
     }
 }
