@@ -234,35 +234,21 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         }
 
         edComment = (EditText) findViewById(R.id.edNewComment);
-        edComment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() > 0) {
-                    btnSendComment.setEnabled(true);
-                } else {
-                    btnSendComment.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
         btnSendComment = (ImageButton) findViewById(R.id.sendCommentButton);
         btnSendComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String strComment = edComment.getText().toString();
-                String datetime = new Date().toString();
-                String millis = String.valueOf(System.currentTimeMillis());
-                Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
-                mFirebaseDatabaseReference.child(COMMENT_CHILD).child(photoKey).push().setValue(comment);
-                mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
-                edComment.setText("");
+                if (TextUtils.getTrimmedLength(strComment) != 0) {
+                    String datetime = new Date().toString();
+                    String millis = String.valueOf(System.currentTimeMillis());
+                    Comment comment = new Comment(mUsername, mUserId, mPhotoUrl, strComment, datetime, millis);
+                    mFirebaseDatabaseReference.child(COMMENT_CHILD).child(photoKey).push().setValue(comment);
+                    mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
+                    edComment.setText("");
+                } else {
+                    edComment.setError(getString(R.string.required));
+                }
             }
         });
 
