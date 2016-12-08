@@ -29,6 +29,7 @@
     <string name="msg_sign_out">You have successfully sign out</string>
     <string name="msg_sign_required">You need to Sign in to upload photo</string>
     <string name="msg_sign_comment">You need to Sign in to comment</string>
+    <string name="msg_sign_like">You need to Sign in to like</string>
     <string name="msg_wallpaper_set">Wallpaper has been set</string>
     <string name="progress_upload">Uploading</string>
     <string name="progress_download">Downloading</string>

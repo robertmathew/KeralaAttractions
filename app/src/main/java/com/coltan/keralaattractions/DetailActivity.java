@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,8 +62,6 @@ import java.util.concurrent.ExecutionException;
 public class DetailActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "DetailActivity";
-
-    private static final int PHOTO_LOADER_ID = 0;
 
     private static final String MESSAGE_SENT_EVENT = "message_sent";
     public static final String PHOTOS_CHILD = "photos";
@@ -149,19 +148,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         TextView tvAuthor = (TextView) findViewById(R.id.author);
         ImageView imgAuthor = (ImageView) findViewById(R.id.authorPic);
 
-        /*ImageButton backButton = (ImageButton) findViewById(R.id.back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });*/
-
-
-        LinearLayout bottomSheetViewgroup
-                = (LinearLayout) findViewById(R.id.linLayoutComment);
-
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
+        final CoordinatorLayout rootLayout = (CoordinatorLayout) findViewById(R.id.activity_detail);
+        LinearLayout bottomSheetViewgroup = (LinearLayout) findViewById(R.id.linLayoutComment);
 
 
         btnLike = (Button) findViewById(R.id.action_like);
@@ -174,11 +162,12 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void onClick(View v) {
                 //Changing the favorite button
-                isLiked = !isLiked;
-                changeLikeButton();
                 if (mFirebaseUser != null) {
-                    Log.d(TAG, "onClick: User not null");
+                    isLiked = !isLiked;
+                    changeLikeButton();
                     onLikeClicked(globalRef);
+                } else {
+                    Snackbar.make(rootLayout, getString(R.string.msg_sign_like), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
