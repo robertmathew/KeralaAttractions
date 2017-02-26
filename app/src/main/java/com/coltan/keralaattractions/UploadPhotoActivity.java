@@ -41,14 +41,13 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Arrays;
 import java.util.Date;
 
-import static com.firebase.ui.auth.ui.AcquireEmailHelper.RC_SIGN_IN;
-
 public class UploadPhotoActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "UploadPhotoActivity";
 
     private static final int READ_REQUEST_CODE = 42;
+    private static final int RC_SIGN_IN = 123;
 
     private String mUsername;
     private String mUsernameId;

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId 'com.coltan.keralaattractions'
         minSdkVersion 19
@@ -35,12 +35,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     /* Android support libraries */
-    compile 'com.android.support:support-annotations:25.0.1'
-    compile 'com.android.support:support-fragment:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.android.support:support-annotations:25.2.0'
+    compile 'com.android.support:support-fragment:25.2.0'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0'
 
     /* 3rd party dependencies */
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -48,11 +48,11 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
 
     /* Firebase dependencies */
-    compile 'com.google.firebase:firebase-database:9.8.0'
-    compile 'com.google.firebase:firebase-storage:9.8.0'
-    compile 'com.google.firebase:firebase-auth:9.8.0'
-    compile 'com.google.firebase:firebase-crash:9.8.0'
-    compile 'com.firebaseui:firebase-ui:1.0.0'
+    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-storage:10.2.0'
+    compile 'com.google.firebase:firebase-auth:10.2.0'
+    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.firebaseui:firebase-ui:1.2.0'
 }
 
 
