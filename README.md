@@ -8,8 +8,7 @@ Attractions is an app for the photographers who like to share photos of India’
 
 ### Screenshots
 
-![Screenshot 1](../master/arts/device-2017-02-26-124645.png)
-![Screenshot 2](../master/arts/device-2017-02-26-124749.png)
+![Screenshot 1](../master/arts/device-2017-02-26-124645.png) ![Screenshot 2](../master/arts/device-2017-02-26-124749.png)
 
 
 ### Third-party Libraries
