@@ -207,18 +207,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.signin:
                 boolean isAuth = sharedPrefAuth.getBoolean(getString(R.string.prefs_is_auth), false);
                 if (isAuth) {
-                    AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // user is now signed out
-                            Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    AuthUI.getInstance()
+                            .signOut(this)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    // user is now signed out
+                                    Toast.makeText(mContext, getString(R.string.msg_sign_out), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 } else {
                     startActivityForResult(AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setLogo(R.drawable.icon)
-                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                            .setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                     new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                             .setTheme(R.style.SignInTheme)
                             .build(), RC_SIGN_IN);

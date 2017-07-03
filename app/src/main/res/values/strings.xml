@@ -40,4 +40,6 @@
 
     <string name="authority" translatable="false">com.coltan.keralaattractions</string>
     <string name="facebook_application_id" translatable="false">371060926368185</string>
+    <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb371060926368185</string>
 </resources>
